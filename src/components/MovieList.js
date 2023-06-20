@@ -1,85 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import MovieList from './components/MovieList';
-import MovieListHeading from './components/MovieListHeading';
-import SearchBox from './components/SearchBox';
-import AddFavourites from './components/AddFavourites';
-import RemoveFavourites from './components/RemoveFavourites';
+/* eslint-disable eqeqeq */
+import React from 'react';
 
-const App = () => {
-	const [movies, setMovies] = useState([]);
-	const [favourites, setFavourites] = useState([]);
-	const [searchValue, setSearchValue] = useState('');
-
-	const getMovieRequest = async (searchValue) => {
-		const url = `https://www.omdbapi.com/?s=${searchValue}&apikey=263d22d8`;
-
-		const response = await fetch(url);
-		const responseJson = await response.json();
-
-		if (responseJson.Search) {
-			setMovies(responseJson.Search);
-		}
-	};
-
-	useEffect(() => {
-		getMovieRequest(searchValue);
-	}, [searchValue]);
-
-	useEffect(() => {
-		const movieFavourites = JSON.parse(
-			localStorage.getItem('react-movie-app-favourites')
-		);
-
-		setFavourites(movieFavourites);
-	}, []);
-
-	const saveToLocalStorage = (items) => {
-		localStorage.setItem('react-movie-app-favourites', JSON.stringify(items));
-	};
-
-	const addFavouriteMovie = (movie) => {
-		const newFavouriteList = favourites == null ? [movie] : [...favourites, movie];
-		setFavourites(newFavouriteList);
-		saveToLocalStorage(newFavouriteList);
-	};
-
-	const removeFavouriteMovie = (movie) => {
-		const newFavouriteList = favourites.filter(
-			(favourite) => favourite.imdbID !== movie.imdbID
-		);
-
-		setFavourites(newFavouriteList);
-		saveToLocalStorage(newFavouriteList);
-	};
-
-	return (
-		<div className='container-fluid movie-app'>
-			<div className='row d-flex align-items-center mt-4 mb-4'>
-				<MovieListHeading heading='Pop Movies' />
-				<SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
-			</div>
-			<div className='row hideScroll'>
-				<MovieList
-					movies={movies}
-				
-					handleFavouritesClick={addFavouriteMovie}
-					favouriteComponent={AddFavourites}
-				/>
-			</div>
-			<div className='row d-flex align-items-center mt-4 mb-4'>
-				<MovieListHeading heading='Your Favourites' />
-			</div>
-			<div className='row hideScroll'>
-				<MovieList
-					movies={favourites}
-					handleFavouritesClick={removeFavouriteMovie}
-					favouriteComponent={RemoveFavourites}
-				/>
-			</div>
-		</div>
-	);
+const MovieList = (props) => {
+    const FavouriteComponent = props.favouriteComponent;
+    if(props.movies == null || props.movies.length == 0){
+        return;
+    }
+    return (
+        <>
+            {props.movies.map((movie, index) => (
+                <div className='image-container d-flex justify-content-start m-3'>
+                    <img src={movie.Poster} alt='movie'></img>
+                    <div
+                        onClick={() => props.handleFavouritesClick(movie)}
+                        className='overlay d-flex align-items-center justify-content-center'
+                    >
+                        <FavouriteComponent />
+                    </div>
+                </div>
+            ))}
+        </>
+    );
+    
 };
 
-export default App;
+export default MovieList;
