@@ -6,7 +6,7 @@ import MovieListHeading from './components/MovieListHeading';
 import SearchBox from './components/SearchBox';
 import AddFavourites from './components/AddFavourites';
 import RemoveFavourites from './components/RemoveFavourites';
-import Filmpedia from 'file:///D:/Downloads/movie_app-main/Filmpedia.png';
+import Filmpedia from 'Filmpedia.png';
 
 const App = () => {
   const [movies, setMovies] = useState([]);
