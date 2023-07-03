@@ -6,79 +6,95 @@ import MovieListHeading from './components/MovieListHeading';
 import SearchBox from './components/SearchBox';
 import AddFavourites from './components/AddFavourites';
 import RemoveFavourites from './components/RemoveFavourites';
+import Filmpedia from 'file:///D:/Downloads/movie_app-main/Filmpedia.png';
 
 const App = () => {
-	const [movies, setMovies] = useState([]);
-	const [favourites, setFavourites] = useState([]);
-	const [searchValue, setSearchValue] = useState('');
+  const [movies, setMovies] = useState([]);
+  const [favourites, setFavourites] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
 
-	const getMovieRequest = async (searchValue) => {
-		const url = `https://www.omdbapi.com/?s=${searchValue}&apikey=263d22d8`;
+  const getMovieRequest = async (searchValue) => {
+    const url = `https://www.omdbapi.com/?s=${searchValue}&apikey=263d22d8`;
 
-		const response = await fetch(url);
-		const responseJson = await response.json();
+    const response = await fetch(url);
+    const responseJson = await response.json();
 
-		if (responseJson.Search) {
-			setMovies(responseJson.Search);
-		}
-	};
+    if (responseJson.Search) {
+      const moviesWithDetails = await Promise.all(
+        responseJson.Search.map(async (movie) => {
+          const movieDetailsResponse = await fetch(
+            `https://www.omdbapi.com/?i=${movie.imdbID}&apikey=263d22d8`
+          );
+          const movieDetailsJson = await movieDetailsResponse.json();
+          return { ...movie, Plot: movieDetailsJson.Plot };
+        })
+      );
+      setMovies(moviesWithDetails);
+    }
+  };
 
-	useEffect(() => {
-		getMovieRequest(searchValue);
-	}, [searchValue]);
+  useEffect(() => {
+    getMovieRequest(searchValue);
+  }, [searchValue]);
 
-	useEffect(() => {
-		const movieFavourites = JSON.parse(
-			localStorage.getItem('react-movie-app-favourites')
-		);
+  useEffect(() => {
+    const movieFavourites = JSON.parse(
+      localStorage.getItem('react-movie-app-favourites')
+    );
 
-		setFavourites(movieFavourites);
-	}, []);
+    setFavourites(movieFavourites);
+  }, []);
 
-	const saveToLocalStorage = (items) => {
-		localStorage.setItem('react-movie-app-favourites', JSON.stringify(items));
-	};
+  const saveToLocalStorage = (items) => {
+    localStorage.setItem('react-movie-app-favourites', JSON.stringify(items));
+  };
 
-	const addFavouriteMovie = (movie) => {
-		const newFavouriteList = favourites == null ? [movie] : [...favourites, movie];
-		setFavourites(newFavouriteList);
-		saveToLocalStorage(newFavouriteList);
-	};
+  const addFavouriteMovie = (movie) => {
+    const newFavouriteList = favourites == null ? [movie] : [...favourites, movie];
+    setFavourites(newFavouriteList);
+    saveToLocalStorage(newFavouriteList);
+  };
 
-	const removeFavouriteMovie = (movie) => {
-		const newFavouriteList = favourites.filter(
-			(favourite) => favourite.imdbID !== movie.imdbID
-		);
+  const removeFavouriteMovie = (movie) => {
+    const newFavouriteList = favourites.filter(
+      (favourite) => favourite.imdbID !== movie.imdbID
+    );
 
-		setFavourites(newFavouriteList);
-		saveToLocalStorage(newFavouriteList);
-	};
+    setFavourites(newFavouriteList);
+    saveToLocalStorage(newFavouriteList);
+  };
 
-	return (
-		<div className='container-fluid movie-app'>
-			<div className='row d-flex align-items-center mt-4 mb-4'>
-				<MovieListHeading heading='Movies' />
-				<SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
-			</div>
-			<div className='row hideScroll'>
-				<MovieList
-					movies={movies}
-					handleFavouritesClick={addFavouriteMovie}
-					favouriteComponent={AddFavourites}
-				/>
-			</div>
-			<div className='row d-flex align-items-center mt-4 mb-4'>
-				<MovieListHeading heading='Favourites' />
-			</div>
-			<div className='row hideScroll'>
-				<MovieList
-					movies={favourites}
-					handleFavouritesClick={removeFavouriteMovie}
-					favouriteComponent={RemoveFavourites}
-				/>
-			</div>
-		</div>
-	);
+  return (
+    <div className='container-fluid movie-app'>
+      
+      <div className='row d-flex align-items-center mt-4 mb-4 header sticky-top'>
+        <div className='col-1'>
+          <img src={Filmpedia} alt='Filmpedia Logo' className='Filmpedia' />
+        </div>
+        <div className='col'>
+          <MovieListHeading heading='Filmpedia' />
+        </div>
+        <SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
+      </div>
+      <div className='row hideScroll'>
+        <MovieList
+          movies={movies}
+          handleFavouritesClick={addFavouriteMovie}
+          favouriteComponent={AddFavourites}
+        />
+      </div>
+      <div className='row d-flex align-items-center mt-4 mb-4'>
+        <MovieListHeading heading='Favourites' />
+      </div>
+      <div className='row hideScroll'>
+        <MovieList
+          movies={favourites}
+          handleFavouritesClick={removeFavouriteMovie}
+          favouriteComponent={RemoveFavourites}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default App;
