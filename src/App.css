@@ -1,56 +1,146 @@
+.movie-app{
+	font-family: 'Montserrat', sans-serif;
+	
+}
+
 body {
-	background: #141414;
+	background: #3f3c3c;
 	color: #ffffff;
+	
 }
 
 .movie-app > .row {
 	overflow-x: auto;
-	flex-wrap: nowrap;
+	flex-wrap: nowrap;	
 }
+  
+.header{
+	background-color: rgb(1, 1, 1);
+	margin-top: 0px;
+	
+}
+
 
 .image-container {
 	position: relative;
 	transition: transform 0.2s;
-  width: auto;
+  	width: auto;
+	height: 300px;
+	
 }
 
 .image-container:hover {
 	cursor: pointer;
 	transform: scale(1.1);
+	
 }
 
 .image-container:hover .overlay {
 	opacity: 1;
+	
 }
 
-.overlay {
+/* .overlay {
 	position: absolute;
 	background: rgba(0, 0, 0, 0.8);
-	width: 100%;
+	width:89.5%;
 	transition: 0.5s ease;
 	opacity: 0;
 	bottom: 0;
-	font-size: 20px;
-	padding: 20px;
+	font-size: 18px;
+	padding: 8px;
 	text-align: center;
-}
+	
+	
+} */
 
 .hideScroll::-webkit-scrollbar {
     display: none;
   }
 
 
-  .hideScroll {
+.hideScroll {
     -ms-overflow-style: none; 
     scrollbar-width: none;  
   }
 
-  body::-webkit-scrollbar {
+body::-webkit-scrollbar {
     display: none;
   }
 
   
-  body {
+body {
     -ms-overflow-style: none;  
-    scrollbar-width: none;  
+    scrollbar-width: none; 
+	
+	
 }
+
+.mr-2{
+	/* padding: 0px; */
+	font-size: 15px;
+	
+}
+
+/* css for the movies name and year to look good */
+
+.movie-card {
+	position: relative;
+}	
+
+.Filmpedia{
+	width: 80px;
+	
+
+}
+
+.overlay {
+	position: absolute;
+	margin-top: 0px;
+	width: 89.5%;
+	background-color: rgba(0, 0, 0, 0.8);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 0.5s ease;
+	cursor: pointer;
+	font-size: 12px;
+  }
+  
+  .movie-info {
+	position: absolute;
+	bottom: 0;
+	width: 89.7%;
+	background-color: rgb(255, 246, 246);
+	opacity: 1;
+	color: #333333;
+	padding: 8px;
+	border-radius: 5px;
+	min-height: 80px;
+  }
+  
+  .movie-title {
+	font-size: 18px;
+	font-weight: bold;
+	margin: 0;
+  }
+  
+  .movie-year {
+	font-size: 14px;
+	margin: 0;
+  }
+
+button{
+	border-radius: 7px;
+	left: 80%;
+	position: absolute;
+	top: 60%;
+	border-style: none;
+	color: aliceblue;
+	background: #000;
+	align-items: center;
+}
+  
+  
+  
